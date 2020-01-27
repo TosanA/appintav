@@ -1,0 +1,453 @@
+swagger: "2.0"
+info:
+  description: "Cette API permet de gérer des colocations en fonction des tâches à réaliser par chacun des membres."
+  version: "1.0.0"
+  title: "Colocation API"
+  contact:
+    email: "lea.banquart@uha.fr"
+    
+host: "localhost:8080"
+tags:
+- name: "Colocations"
+  description: "Contrôle des colocations"
+- name: "Users"
+  description: "Contrôle des utilisateurs"
+- name: "Tasks"
+  description: "Contrôle des tâches"
+schemes:
+- "http"
+
+paths:
+  /colocations/add:
+    post:
+      tags:
+      - "Colocations"
+      summary: "Ajouter une nouvelle colocation"
+      description: ""
+      operationId: "addColocation"
+      responses:
+        200:
+          description: "ID de la colocation"          
+          schema:
+            $ref : "#/definitions/AddColocationSuccess"
+  /colocations/addUser:
+    post:
+      tags:
+      - "Colocations"
+      summary: "Ajouter un nouveau habitant dans la colocation"
+      description: ""
+      operationId: "addOneUserInColocation"
+      parameters:
+      - name: "ID"
+        in: "query"
+        description: "ID de la colocation"
+        required: true
+        type: "integer"
+      - name: "userID"
+        in: "query"
+        description: "ID de l'habitant à ajouter"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "La colocation"          
+          schema:
+            $ref : "#/definitions/ColocationSuccess"
+        404:
+          description: "L'utilisateur ou la colocation est introuvable, ou il existe déjà cet utilisateur dans la colocation."
+          schema:
+            $ref : "#/definitions/RecordAlreadyExistsException"
+  /colocations/removeUser:
+    delete:
+      tags:
+      - "Colocations"
+      summary: "Supprimer un nouveau habitant dans la colocation"
+      description: ""
+      operationId: "removeOneUserInColocation"
+      parameters:
+      - name: "ID"
+        in: "query"
+        description: "ID de la colocation"
+        required: true
+        type: "integer"
+      - name: "userID"
+        in: "query"
+        description: "ID de l'habitant à supprimer"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref : "#/definitions/ColocationSuccess"
+        404:
+          description: "L'utilisateur ou la colocation est introuvable, ou il existe déjà cet utilisateur dans la colocation."
+          schema:
+            $ref : "#/definitions/RecordAlreadyExistsException"
+  /colocations/addTask:
+    post:
+      tags:
+      - "Colocations"
+      summary: "Ajouter une nouvelle tâche à la colocation"
+      description: ""
+      operationId: "addOneTaskInColocation"
+      parameters:
+      - name: "ID"
+        in: "query"
+        description: "ID de la colocation"
+        required: true
+        type: "integer"
+      - name: "description"
+        in: "query"
+        description: "Description de la tâche"
+        required: true
+        type: "string"
+      - name: "points"
+        in: "query"
+        description: "Nombre de points de la tâche"
+        required: true
+        type: "integer"
+      - name: "askerId"
+        in: "query"
+        description: "ID du demandeur de la tâche"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "La colocation"          
+          schema:
+            $ref : "#/definitions/ColocationSuccess"
+        404:
+          description: "L'utilisateur ou la colocation est introuvable, ou il existe déjà cet utilisateur dans la colocation."
+          schema:
+            $ref : "#/definitions/RecordAlreadyExistsException"
+  /colocations/taskDone:
+    delete:
+      tags:
+      - "Colocations"
+      summary: "Met une tâche 'faite'"
+      description: ""
+      operationId: "setOneTaskDoneInColocation"
+      parameters:
+      - name: "ID"
+        in: "query"
+        description: "ID de la colocation"
+        required: true
+        type: "integer"
+      - name: "taskID"
+        in: "query"
+        description: "ID de la tâche à modifier"
+        required: true
+        type: "integer"
+      - name: "donerID"
+        in: "query"
+        description: "ID de la personne ayant fait la tâche"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref : "#/definitions/ColocationSuccess"
+        404:
+          description: "L'utilisateur ou la colocation est introuvable, ou il existe déjà cet utilisateur dans la colocation."
+          schema:
+            $ref : "#/definitions/RecordAlreadyExistsException"
+  /colocations/update:
+    post:
+      tags:
+      - "Colocations"
+      summary: "Mettre une colocation entière à jour"
+      description: ""
+      operationId: "updateColocation"
+      parameters:
+      - name: "Colocation"
+        in: "body"
+        description: "Colocation à mettre à jour"
+        required: true
+        schema:
+          $ref: "#/definitions/Colocation"
+      responses:
+        200:
+          description: "La colocation éditée"
+          schema:
+            $ref: "#/definitions/UpdateColocationSuccess"
+  /colocations/delete:
+    delete:
+      tags:
+      - "Colocations"
+      summary: "Supprimer une colocation"
+      description: ""
+      operationId: "deleteColocation"
+      parameters:
+      - name: "ID"
+        in: "query"
+        description: "ID de la colocation à supprimer"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description : "La colocation supprimée"
+          schema:
+            $ref: "#/definitions/UpdateColocationSuccess"
+        404:
+          description: "La colocation est introuvable."
+          schema:
+            $ref : "#/definitions/RecordAlreadyExistsException"
+  /colocations/all:
+    get:
+      tags:
+      - "Colocations"
+      summary: "Récupérer toutes les colocations"
+      description: ""
+      operationId: "getAllColocations"
+      responses:
+        200:
+          description: "Liste de toutes les colocations"
+          schema:
+            $ref: "#/definitions/GetAllColocations"
+          
+  /users/add:
+    post:
+      tags:
+      - "Users"
+      summary: "Ajouter un utilisateur"
+      description: ""
+      operationId: "addUser"
+      parameters:
+      - name: "User"
+        in: "body"
+        description: "L'utilisateur à ajouter"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "ID de l'utilisateur'"
+          schema:
+            $ref: "#/definitions/UserSuccess"
+  /users/update:
+    post:
+      tags:
+      - "Users"
+      summary: "Mettre un utilisateur à jour"
+      description: ""
+      operationId: "updateUser"
+      parameters:
+      - name: "User"
+        in: "body"
+        description: "L'utilisateur à mettre à jour"
+        required: true
+        schema:
+          $ref: "#/definitions/User"
+      responses:
+        200:
+          description: "L'utilisateur mis à jour"
+          schema:
+            $ref: "#/definitions/User"
+        404:
+          description: "L'utilisateur est introuvable."
+          schema:
+            $ref : "#/definitions/RecordAlreadyExistsException"
+  /users/delete:
+    delete:
+      tags:
+      - "Users"
+      summary: "Supprimer un utilisateur"
+      description: ""
+      operationId: "deleteUser"
+      parameters:
+      - name: "ID"
+        in: "query"
+        description: "ID de l'utilisateur à supprimer"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Renvoie seulement 'Deleted'"
+        404:
+          description: "L'utilisateur est introuvable."
+          schema:
+            $ref : "#/definitions/RecordAlreadyExistsException"
+  /users/all:
+    get:
+      tags:
+      - "Users"
+      summary: "Récupérer tous les utilisateurs"
+      description: ""
+      operationId: "getAllUsers"
+      responses:
+        200:
+          description: "La liste de tous les utilisateurs"
+          schema:
+            $ref: "#/definitions/GetAllUsers"
+  
+  /tasks/add:
+    post:
+      tags:
+      - "Tasks"
+      summary: "Ajouter une tâche"
+      description: ""
+      operationId: "addTask"
+      parameters:
+      - name: "Task"
+        in: "body"
+        description: "Tâche à ajouter"
+        required: true
+        schema:
+          $ref: "#/definitions/Task"
+      responses:
+        200:
+          description: "ID de la tâche"
+          schema:
+            $ref: "#/definitions/TaskSuccess"
+  /tasks/update:
+    post:
+      tags:
+      - "Tasks"
+      summary: "Mettre une tâche à jour"
+      description: ""
+      operationId: "updateTask"
+      parameters:
+      - name: "Task"
+        in: "body"
+        description: "La tâche à mettre à jour"
+        required: true
+        schema:
+          $ref: "#/definitions/Task"
+      responses:
+        200:
+          description: "La tâche mise à jour"
+          schema:
+            $ref: "#/definitions/Task"
+        404:
+          description: "La tâche est introuvable."
+          schema:
+            $ref : "#/definitions/RecordAlreadyExistsException"
+  /tasks/delete:
+    delete:
+      tags:
+      - "Tasks"
+      summary: "Supprimer une tâche"
+      description: ""
+      operationId: "deleteTask"
+      parameters:
+      - name: "ID"
+        in: "query"
+        description: "ID de la tâche à supprimer"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "Renvoie seulement 'Deleted'"
+        404:
+          description: "La tâche est introuvable."
+          schema:
+            $ref : "#/definitions/RecordAlreadyExistsException"
+  /tasks/all:
+    get:
+      tags:
+      - "Tasks"
+      summary: "Récupérer toutes les tâches"
+      description: ""
+      operationId: "getAllTasks"
+      responses:
+        200:
+          description: "La liste de toutes les tâches"
+          schema:
+            $ref: "#/definitions/GetAllTasks"
+    
+  
+definitions:
+  Colocation:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      users:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
+        description: "Liste des habitants de la colocation"
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      name:
+        type: "string"
+        description: "Nom de l'utilisateur"
+      points:
+        type: "integer"
+        description: "Nombre de points de l'utilisateur"
+  Task:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      description:
+        type: "string"
+        description: "Description de la tâche à faire"
+      points:
+        type: "integer"
+        description: "Nombre de points de la tâche"
+      isDone:
+        type: "boolean"
+        description: "Booléen permettant de savoir si une tâche est faite ou pas"
+  RecordAlreadyExistsException:
+    type: "object"
+    required: [message]
+    properties:
+      message:
+        type: string
+      errors:
+        type: object
+  ColocationSuccess:
+    type: "object"
+    properties:
+      colocation:
+        $ref: "#/definitions/Colocation"
+  UserSuccess:
+    type: "object"
+    required: [id]
+    properties:
+      id:
+        type: integer
+  TaskSuccess:
+    type: "object"
+    required: [id]
+    properties:
+      id:
+        type: integer
+  AddColocationSuccess:
+    type: "object"
+    required: [id]
+    properties:
+      id:
+        type: integer
+  UpdateColocationSuccess:
+    type: "object"
+    properties:
+      colocation:
+        $ref: "#/definitions/Colocation"
+  GetAllColocations:
+    type: "array"
+    items:
+        $ref: "#/definitions/Colocation"
+  GetAllUsers:
+    type: "array"
+    items:
+        $ref: "#/definitions/User"
+  GetAllTasks:
+    type: "array"
+    items:
+        $ref: "#/definitions/Task"
+  
+  
+  
+  
+  
+  

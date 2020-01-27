@@ -1,6 +1,7 @@
 package fr.uha.appintav.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ public class UserController {
 		return this.userRepository.save(user);
 	}
 
-	@PostMapping(path="/delete")
+	@DeleteMapping(path="/delete")
 	public @ResponseBody String delete(@RequestParam(value = "id", required = true) Integer id) {
 		this.userRepository.deleteById(id);
 		return "Deleted";
@@ -39,5 +40,4 @@ public class UserController {
 	public @ResponseBody Iterable<User> getAllUsers() {
 		return this.userRepository.findAll();
 	}
-	
 }

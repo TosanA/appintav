@@ -19,16 +19,6 @@ public class TaskController {
 
 	@Autowired
 	private TaskRepository taskRepository;
-	
-	@PostMapping(path="/add")
-	public @ResponseBody Task add(@RequestBody Task task) {
-		return this.taskRepository.save(task);
-	}
-
-	@PostMapping(path="/update")
-	public @ResponseBody Task update(@RequestBody Task task) {
-		return this.taskRepository.save(task);
-	}
 
 	@DeleteMapping(path="/delete")
 	public @ResponseBody String delete(@RequestParam(value = "id", required = true) Integer id) {

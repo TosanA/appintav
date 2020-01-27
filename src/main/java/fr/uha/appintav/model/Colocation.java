@@ -31,8 +31,12 @@ public class Colocation {
 	@ElementCollection
 	private List<User> users;
 
+	@ElementCollection
+	private List<Task> tasks;
+	
 	public Colocation() {
-		users = new ArrayList<User>();
+		this.users = new ArrayList<User>();
+		this.tasks = new ArrayList<Task>();
 	}
 
 	public Integer getId() {
@@ -49,5 +53,13 @@ public class Colocation {
 	
 	public void setUsers(List<User> users) {
 		this.users = users;
+	}
+	
+	public List<Task> getTasks(){
+		return this.tasks;
+	}
+	
+	public void setTasks(List<Task> tasks) {
+		this.tasks = tasks;
 	}
 }

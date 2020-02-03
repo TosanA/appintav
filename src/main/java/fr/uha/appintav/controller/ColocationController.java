@@ -46,17 +46,19 @@ public class ColocationController {
 		Optional<Colocation> colocOpt = this.colocationRepository.findById(id);
 		if (colocOpt.equals(Optional.empty()))
 			throw new RecordNotFoundException("Colocation with id '" + id + "' does not exist.");
-		Colocation coloc = colocOpt.get();
 		
 		Optional<User> userOpt = userRepository.findById(userId);
-		User user = userOpt.get();
+		if (userOpt.equals(Optional.empty()))
+			throw new RecordNotFoundException("User with id '" + userId + "' does not exist.");
 		
+		Colocation coloc = colocOpt.get();
+		User user = userOpt.get();		
 		if (coloc.getUsers().contains(user))
 			throw new RecordAlreadyExistsException("Colocation with id '" + id + "' already has user with id '" + userId + "'.");
-		
-		coloc.getUsers().add(user);
-		
-		return this.colocationRepository.save(coloc);
+
+		user.setColocation(coloc);
+		this.userRepository.save(user);
+		return this.colocationRepository.findById(id).get();
 	}
 	
 	@DeleteMapping(path="/removeUser")
@@ -81,9 +83,9 @@ public class ColocationController {
 			@RequestParam(required = true) Integer askerId) {
 
 		Colocation coloc = this.colocationRepository.findById(id).get();
-		this.userRepository.findById(askerId);
+		User user = this.userRepository.findById(askerId).get();
 		
-		coloc.getTasks().add(this.taskRepository.save(new Task(description, points, id, askerId)));
+		coloc.getTasks().add(this.taskRepository.save(new Task(description, points, coloc, user)));
 		
 		return this.colocationRepository.save(coloc);
 	}
@@ -96,6 +98,7 @@ public class ColocationController {
 		
 		Colocation coloc = this.colocationRepository.findById(id).get();
 		Task task = this.taskRepository.findById(taskId).get();
+		User user = this.userRepository.findById(donerId).get();		
 		
 		if (!coloc.getTasks().contains(task))
 			throw new RecordNotFoundException("Task with id '" + taskId + "' is not in colocation with id '" + id + "'.");
@@ -103,7 +106,7 @@ public class ColocationController {
 			throw new RecordNotFoundException("User with id '" + donerId + "' is not in colocation with id '" + id + "'.");
 
 		task.setisDone(true);
-		task.setDonerId(donerId);
+		task.setDoner(user);
 		this.taskRepository.save(task);
 		
 		return coloc;

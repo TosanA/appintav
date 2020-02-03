@@ -21,8 +21,10 @@ public class UserController {
 	private UserRepository userRepository;
 	
 	@PostMapping(path="/add")
-	public @ResponseBody User add(@RequestBody User user) {
-		return this.userRepository.save(user);
+	public @ResponseBody User add(
+			@RequestParam(required = true) String name,
+			@RequestParam(required = true) Integer points) {
+		return this.userRepository.save(new User(name, points));
 	}
 
 	@PostMapping(path="/update")

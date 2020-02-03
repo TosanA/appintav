@@ -1,5 +1,6 @@
 package fr.uha.appintav.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,20 +19,18 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.Cascade;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
-@Table(name = "colocations")
-public class Colocation {
+public class Colocation implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
-	
-	//@OneToMany(cascade = CascadeType.ALL)
-	//@JoinColumn(name = "COLOC_ID", updatable = false, insertable = false)
-	//@org.hibernate.annotations.IndexColumn(name = "parent_index")
-	@ElementCollection
+
+	@OneToMany(mappedBy = "colocation")
 	private List<User> users;
 
-	@ElementCollection
+	@OneToMany(mappedBy = "colocation")
 	private List<Task> tasks;
 	
 	public Colocation() {

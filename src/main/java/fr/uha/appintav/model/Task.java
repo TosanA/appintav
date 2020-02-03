@@ -1,15 +1,18 @@
 package fr.uha.appintav.model;
 
-import javax.persistence.Embeddable;
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
-@Embeddable
-public class Task {
+public class Task implements Serializable{
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	private Integer id;
@@ -18,19 +21,30 @@ public class Task {
 	private Integer points;
 	private boolean isDone;
 	
-	private Integer colocationId;
-	private Integer askerId;
-	private Integer donerId;
+	@ManyToOne
+	@JoinColumn(name = "colocation")	
+	@JsonBackReference
+	private Colocation colocation;
+
+	@JsonBackReference
+	@ManyToOne
+	@JoinColumn(name = "asker")	
+	private User asker;
+
+	@JsonBackReference
+	@ManyToOne
+	@JoinColumn(name = "doner")	
+	private User doner;
 	
 	public Task() {}
 	
-	public Task(String description, Integer points, Integer colocationId, Integer askerId) {
+	public Task(String description, Integer points, Colocation colocation, User asker) {
 		this.description = description;
 		this.points = points;
 		this.isDone = false;
-		this.setColocationId(colocationId);
-		this.setAskerId(askerId);
-		this.setDonerId(null);
+		this.setColocation(colocation);
+		this.setAsker(asker);
+		this.setDoner(null);
 	}
 	
 	public Integer getId() {
@@ -65,28 +79,28 @@ public class Task {
 		this.isDone = d;
 	}
 
-	public Integer getAskerId() {
-		return askerId;
+	public User getAsker() {
+		return asker;
 	}
 
-	public void setAskerId(Integer askerId) {
-		this.askerId = askerId;
+	public void setAsker(User asker) {
+		this.asker = asker;
 	}
 
-	public Integer getDonerId() {
-		return donerId;
+	public User getDoner() {
+		return doner;
 	}
 
-	public void setDonerId(Integer donerId) {
-		this.donerId = donerId;
+	public void setDoner(User doner) {
+		this.doner = doner;
 	}
 
-	public Integer getColocationId() {
-		return colocationId;
+	public Colocation getColocation() {
+		return colocation;
 	}
 
-	public void setColocationId(Integer colocationId) {
-		this.colocationId = colocationId;
+	public void setColocation(Colocation colocation) {
+		this.colocation = colocation;
 	}
 
 }

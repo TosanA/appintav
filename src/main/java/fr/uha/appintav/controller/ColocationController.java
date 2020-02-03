@@ -1,5 +1,6 @@
 package fr.uha.appintav.controller;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,36 +44,51 @@ public class ColocationController {
 	public @ResponseBody Colocation addUser(
 			@RequestParam(required = true) Integer id,
 			@RequestParam(required = true) Integer userId) {
-		Optional<Colocation> colocOpt = this.colocationRepository.findById(id);
-		if (colocOpt.equals(Optional.empty()))
+		Colocation coloc = null;
+		User user = null;
+		try {
+			coloc = this.colocationRepository.findById(id).get();			
+		}catch (NoSuchElementException e) {
 			throw new RecordNotFoundException("Colocation with id '" + id + "' does not exist.");
-		
-		Optional<User> userOpt = userRepository.findById(userId);
-		if (userOpt.equals(Optional.empty()))
+		}
+		try {
+			user = this.userRepository.findById(userId).get();
+		}catch (NoSuchElementException e) {
 			throw new RecordNotFoundException("User with id '" + userId + "' does not exist.");
+		}
 		
-		Colocation coloc = colocOpt.get();
-		User user = userOpt.get();		
 		if (coloc.getUsers().contains(user))
 			throw new RecordAlreadyExistsException("Colocation with id '" + id + "' already has user with id '" + userId + "'.");
 
 		user.setColocation(coloc);
 		this.userRepository.save(user);
-		return this.colocationRepository.findById(id).get();
+		coloc.getUsers().add(user);
+		return coloc;
 	}
 	
 	@DeleteMapping(path="/removeUser")
 	public @ResponseBody Colocation removeUser(
 			@RequestParam(required = true) Integer id,
 			@RequestParam(required = true) Integer userId) {
-		User user = userRepository.findById(userId).get();
-		Colocation coloc = this.colocationRepository.findById(id).get();
-		
+		Colocation coloc = null;
+		User user = null;
+		try {
+			coloc = this.colocationRepository.findById(id).get();			
+		}catch (NoSuchElementException e) {
+			throw new RecordNotFoundException("Colocation with id '" + id + "' does not exist.");
+		}
+		try {
+			user = this.userRepository.findById(userId).get();
+		}catch (NoSuchElementException e) {
+			throw new RecordNotFoundException("User with id '" + userId + "' does not exist.");
+		}
 		if (!coloc.getUsers().contains(user))
 			throw new RecordAlreadyExistsException("Colocation with id '" + id + "' doesn't has user with id '" + userId + "'.");
-		
+
+		user.setColocation(null);
+		this.userRepository.save(user);
 		coloc.getUsers().remove(user);
-		return this.colocationRepository.save(coloc);
+		return coloc;
 	}
 	
 	@PostMapping(path="/addTask")
@@ -81,13 +97,22 @@ public class ColocationController {
 			@RequestParam(required = true) String description,
 			@RequestParam(required = true) Integer points,
 			@RequestParam(required = true) Integer askerId) {
-
-		Colocation coloc = this.colocationRepository.findById(id).get();
-		User user = this.userRepository.findById(askerId).get();
+		Colocation coloc = null;
+		User user = null;
+		try {
+			coloc = this.colocationRepository.findById(id).get();			
+		}catch (NoSuchElementException e) {
+			throw new RecordNotFoundException("Colocation with id '" + id + "' does not exist.");
+		}
+		try {
+			user = this.userRepository.findById(askerId).get();
+		}catch (NoSuchElementException e) {
+			throw new RecordNotFoundException("User with id '" + askerId + "' does not exist.");
+		}
 		
-		coloc.getTasks().add(this.taskRepository.save(new Task(description, points, coloc, user)));
-		
-		return this.colocationRepository.save(coloc);
+		Task task = this.taskRepository.save(new Task(description, points, coloc, user));
+		this.taskRepository.save(task);
+		return coloc;
 	}
 	
 	@PostMapping(path="/taskDone")
@@ -95,10 +120,24 @@ public class ColocationController {
 			@RequestParam(required = true) Integer id,
 			@RequestParam(required = true) Integer taskId,
 			@RequestParam(required = true) Integer donerId) {
-		
-		Colocation coloc = this.colocationRepository.findById(id).get();
-		Task task = this.taskRepository.findById(taskId).get();
-		User user = this.userRepository.findById(donerId).get();		
+		Colocation coloc = null;
+		User user = null;
+		Task task = null;
+		try {
+			coloc = this.colocationRepository.findById(id).get();			
+		}catch (NoSuchElementException e) {
+			throw new RecordNotFoundException("Colocation with id '" + id + "' does not exist.");
+		}
+		try {
+			user = this.userRepository.findById(donerId).get();
+		}catch (NoSuchElementException e) {
+			throw new RecordNotFoundException("User with id '" + donerId + "' does not exist.");
+		}
+		try {
+			task = this.taskRepository.findById(taskId).get();
+		}catch(NoSuchElementException e) {
+			throw new RecordNotFoundException("Task with id '" + taskId + "' does not exist.");
+		}
 		
 		if (!coloc.getTasks().contains(task))
 			throw new RecordNotFoundException("Task with id '" + taskId + "' is not in colocation with id '" + id + "'.");

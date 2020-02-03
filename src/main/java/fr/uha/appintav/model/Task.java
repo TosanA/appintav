@@ -22,18 +22,18 @@ public class Task implements Serializable{
 	private boolean isDone;
 	
 	@ManyToOne
-	@JoinColumn(name = "colocation")	
+	@JoinColumn(name = "colocationid")
 	@JsonBackReference
 	private Colocation colocation;
 
-	@JsonBackReference
 	@ManyToOne
-	@JoinColumn(name = "asker")	
+	@JoinColumn(name = "askerid")	
+	@JsonBackReference
 	private User asker;
 
-	@JsonBackReference
 	@ManyToOne
-	@JoinColumn(name = "doner")	
+	@JoinColumn(name = "donerid")	
+	@JsonBackReference
 	private User doner;
 	
 	public Task() {}

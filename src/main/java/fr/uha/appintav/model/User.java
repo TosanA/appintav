@@ -4,25 +4,20 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Embeddable;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 public class User implements Serializable {
 	@Id
-	@GeneratedValue(strategy=GenerationType.AUTO)
-	private Integer id;
-
-	private String name;
+	private String email;
+	private String password;
+	
 	private Integer points;
 
 	@JsonBackReference
@@ -39,32 +34,25 @@ public class User implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "User : { id: " + this.id +", name: " + this.name + " points: " + this.points + " }";
+		return "User : { email: " + this.email + " points: " + this.points + " }";
 	}
 	
 	public User() {}
 	
-	public User(String name, int points) {
-		this.name = name;
+	public User(String email, String password, int points) {
+		this.setEmail(email);
+		this.setPassword(password);
 		this.setPoints(points);
 		this.asker = new ArrayList<Task>();
 		this.doner = new ArrayList<Task>();
 	}
-	
-	public Integer getId() {
-		return id;
+
+	public String getEmail() {
+		return this.email;
 	}
 
-	public void setId(Integer id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 	public int getPoints() {
@@ -97,5 +85,13 @@ public class User implements Serializable {
 	
 	public void setDoner(List<Task> doner) {
 		this.doner = doner;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 }

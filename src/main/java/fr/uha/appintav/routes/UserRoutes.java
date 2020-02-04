@@ -22,19 +22,15 @@ public class UserRoutes {
 	
 	@PostMapping(path="/add")
 	public @ResponseBody User add(
-			@RequestParam(required = true) String name,
+			@RequestParam(required = true) String email,
+			@RequestParam(required = true) String password,
 			@RequestParam(required = true) Integer points) {
-		return this.userController.add(name, points);
+		return this.userController.add(email, password, points);
 	}
-	
-	@PostMapping(path="/update")
-	public @ResponseBody User update(@RequestBody User user) {
-		return this.userController.update(user);
-	}
-	
+		
 	@DeleteMapping(path="/delete")
-	public @ResponseBody String delete(@RequestParam(value = "id", required = true) Integer id) {
-		return this.userController.delete(id);
+	public @ResponseBody String delete(@RequestParam(required = true) String email) {
+		return this.userController.delete(email);
 	}
 	@GetMapping(path="/all")
 	public @ResponseBody Iterable<User> getAllUsers() {

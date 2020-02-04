@@ -139,6 +139,14 @@ public class ColocationController {
 		if (!coloc.getUsers().contains(this.userRepository.findById(donerId).get()))
 			throw new RecordNotFoundException("User with id '" + donerId + "' is not in colocation with id '" + id + "'.");
 
+		for (User u : coloc.getUsers()) {
+			if (u.getName().equals(user.getName())) {
+				u.setPoints(u.getPoints() + task.getPoints());
+			}else {
+				u.setPoints(u.getPoints() - task.getPoints() / (coloc.getUsers().size() - 1));
+			}
+			this.userRepository.save(u);
+		}
 		task.setisDone(true);
 		task.setDoner(user);
 		this.taskRepository.save(task);

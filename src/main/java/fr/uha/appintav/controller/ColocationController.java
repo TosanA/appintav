@@ -4,6 +4,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,8 +23,7 @@ import fr.uha.appintav.repo.ColocationRepository;
 import fr.uha.appintav.repo.TaskRepository;
 import fr.uha.appintav.repo.UserRepository;
 
-@RestController
-@RequestMapping("/colocations")
+@Component
 public class ColocationController {
 
 	@Autowired
@@ -35,12 +35,10 @@ public class ColocationController {
 	@Autowired
 	private TaskRepository taskRepository;
 	
-	@PostMapping(path="/add")
 	public @ResponseBody Integer add() {
 		return this.colocationRepository.save(new Colocation()).getId();
 	}
 	
-	@PostMapping(path="/addUser")
 	public @ResponseBody Colocation addUser(
 			@RequestParam(required = true) Integer id,
 			@RequestParam(required = true) Integer userId) {
@@ -66,7 +64,6 @@ public class ColocationController {
 		return coloc;
 	}
 	
-	@DeleteMapping(path="/removeUser")
 	public @ResponseBody Colocation removeUser(
 			@RequestParam(required = true) Integer id,
 			@RequestParam(required = true) Integer userId) {
@@ -91,7 +88,6 @@ public class ColocationController {
 		return coloc;
 	}
 	
-	@PostMapping(path="/addTask")
 	public @ResponseBody Colocation addTask(
 			@RequestParam(required = true) Integer id,
 			@RequestParam(required = true) String description,
@@ -115,7 +111,6 @@ public class ColocationController {
 		return coloc;
 	}
 	
-	@PostMapping(path="/taskDone")
 	public @ResponseBody Colocation taskDone(
 			@RequestParam(required = true) Integer id,
 			@RequestParam(required = true) Integer taskId,
@@ -151,12 +146,10 @@ public class ColocationController {
 		return coloc;
 	}
 	
-	@PostMapping(path="/update")
 	public @ResponseBody Colocation update(@RequestBody Colocation colocation) {
 		return this.colocationRepository.save(colocation);
 	}
 
-	@DeleteMapping(path="/delete")
 	public @ResponseBody String deleteById(@RequestParam(value = "id", required = true) Integer id) {
 		Optional<Colocation> colocOpt = this.colocationRepository.findById(id);
 		if (colocOpt.equals(Optional.empty()))
@@ -165,7 +158,6 @@ public class ColocationController {
 		return "Deleted";
 	}
 
-	@GetMapping(path="/all")
 	public @ResponseBody Iterable<Colocation> getAll() {
 		return this.colocationRepository.findAll();
 	}

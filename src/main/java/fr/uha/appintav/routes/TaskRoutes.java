@@ -1,33 +1,31 @@
-package fr.uha.appintav.controller;
+package fr.uha.appintav.routes;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import fr.uha.appintav.controller.TaskController;
 import fr.uha.appintav.model.Task;
-import fr.uha.appintav.repo.TaskRepository;
 
-@Component
-public class TaskController {
-
+@RestController
+@RequestMapping("/tasks")
+public class TaskRoutes {
+	
 	@Autowired
-	private TaskRepository taskRepository;
+	private TaskController taskController;
 	
+	@DeleteMapping(path="/delete")
 	public @ResponseBody String delete(@RequestParam(value = "id", required = true) Integer id) {
-		this.taskRepository.deleteById(id);
-		return "Deleted";
-	}
-
-	public @ResponseBody Iterable<Task> getAllTasks() {
-		return this.taskRepository.findAll();
+		return this.taskController.delete(id);
 	}
 	
-}
+	@GetMapping(path="/all")
+	public @ResponseBody Iterable<Task> getAllTasks() {
+		return this.taskController.getAllTasks();
+	}
 
+}

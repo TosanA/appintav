@@ -4,11 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
+import java.security.Key;
 
 import fr.uha.appintav.controller.UserController;
 import fr.uha.appintav.model.User;
@@ -16,7 +20,7 @@ import fr.uha.appintav.model.User;
 @RestController
 @RequestMapping("/users")
 public class UserRoutes {
-	
+
 	@Autowired
 	private UserController userController;
 	
@@ -29,9 +33,11 @@ public class UserRoutes {
 	}
 		
 	@DeleteMapping(path="/delete")
-	public @ResponseBody String delete(@RequestParam(required = true) String email) {
+	public @ResponseBody String delete(
+			@RequestParam(required = true) String email) {
 		return this.userController.delete(email);
 	}
+	
 	@GetMapping(path="/all")
 	public @ResponseBody Iterable<User> getAllUsers() {
 		return this.userController.getAllUsers();

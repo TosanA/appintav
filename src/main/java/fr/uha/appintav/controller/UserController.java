@@ -2,8 +2,6 @@ package fr.uha.appintav.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import fr.uha.appintav.model.User;
 import fr.uha.appintav.repo.UserRepository;
@@ -23,7 +21,7 @@ public class UserController {
 		return "User '" + email + "' deleted";
 	}
 
-	public @ResponseBody Iterable<User> getAllUsers() {
+	public Iterable<User> getAllUsers() {
 		return this.userRepository.findAll();
 	}
 }

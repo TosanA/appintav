@@ -1,6 +1,7 @@
 package fr.uha.appintav.routes;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -56,7 +57,7 @@ public class ColocationRoutes {
 	}
 	
 	@DeleteMapping(path="/delete")
-	public @ResponseBody String deleteById(
+	public @ResponseBody ResponseEntity<String> deleteById(
 			@RequestParam(value = "id", required = true) Integer id) {
 		return this.colocationController.deleteById(id);
 	}

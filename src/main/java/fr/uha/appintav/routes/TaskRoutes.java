@@ -1,6 +1,7 @@
 package fr.uha.appintav.routes;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,7 +20,7 @@ public class TaskRoutes {
 	private TaskController taskController;
 	
 	@DeleteMapping(path="/delete")
-	public @ResponseBody String delete(@RequestParam(value = "id", required = true) Integer id) {
+	public @ResponseBody ResponseEntity<String> delete(@RequestParam(value = "id", required = true) Integer id) {
 		return this.taskController.delete(id);
 	}
 	

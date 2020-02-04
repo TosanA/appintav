@@ -4,6 +4,8 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -142,12 +144,12 @@ public class ColocationController {
 		return this.colocationRepository.save(colocation);
 	}
 
-	public String deleteById(Integer id) {
+	public ResponseEntity<String> deleteById(Integer id) {
 		Optional<Colocation> colocOpt = this.colocationRepository.findById(id);
 		if (colocOpt.equals(Optional.empty()))
 			throw new RecordNotFoundException("Colocation with id '" + id + "' does not exist.");	
 		this.colocationRepository.deleteById(id);
-		return "Deleted";
+		return new ResponseEntity<>("Deleted", HttpStatus.OK);
 	}
 
 	public Iterable<Colocation> getAll() {

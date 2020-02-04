@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 
 import fr.uha.appintav.error.RecordNotFoundException;
@@ -42,13 +44,13 @@ public class AuthController {
 		return Jwts.builder().setSubject(email).setExpiration(date).signWith(key).compact();
 	}
 	
-	public String logout(String token) {
+	public ResponseEntity<String> logout(String token) {
 		try {
 		    Jwts.parser().setSigningKey(key).parseClaimsJws(token);
 		} catch (JwtException e) {
-			return "This token doesn't fit with anyone.";
+			return new ResponseEntity<>("This token doesn't fit with anyone.", HttpStatus.GATEWAY_TIMEOUT);
 		}
-		return "Logout succed.";
+		return new ResponseEntity<>("Logout succed.", HttpStatus.OK);
 	}
 	
 }

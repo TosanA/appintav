@@ -1,6 +1,7 @@
 package fr.uha.appintav.routes;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,7 @@ public class UserRoutes {
 	}
 		
 	@DeleteMapping(path="/delete")
-	public @ResponseBody String delete(
+	public @ResponseBody ResponseEntity<String> delete(
 			@RequestParam(required = true) String email) {
 		return this.userController.delete(email);
 	}

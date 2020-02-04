@@ -1,6 +1,7 @@
 package fr.uha.appintav.routes;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -24,7 +25,7 @@ public class AuthRoutes {
 	}
 	
 	@PostMapping(path="/logout")
-	public @ResponseBody String logout(
+	public @ResponseBody ResponseEntity<String> logout(
 			@RequestParam(required = true) String token) {
 		return this.authController.logout(token);
 	}

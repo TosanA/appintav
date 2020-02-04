@@ -5,16 +5,11 @@ info:
   title: "Colocation API"
   contact:
     email: "lea.banquart@uha.fr"
+  license:
+    name: "Banquart Léa et Tosan Albéric"
     
 servers:
   - url: "http://localhost:8080/"
-tags:
-- name: "Colocations"
-  description: "Contrôle des colocations"
-- name: "Users"
-  description: "Contrôle des utilisateurs"
-- name: "Tasks"
-  description: "Contrôle des tâches"
 
 paths:
   /colocations/add:
@@ -42,13 +37,13 @@ paths:
           allowReserved: true
           schema:
             type: "integer"
-        - name: "userID"
+        - name: "userEmail"
           in: "query"
-          description: "ID de l'habitant à ajouter"
+          description: "Email de l'habitant à ajouter"
           required: true
           allowReserved: true
           schema:
-            type: "integer"
+            type: "string"
       responses:
         '200':
           description: "Retourne la colocation"          
@@ -69,13 +64,13 @@ paths:
           allowReserved: true
           schema:
             type: "integer"
-        - name: "userID"
+        - name: "userEmail"
           in: "query"
-          description: "ID de l'habitant à supprimer"
+          description: "Email de l'habitant à supprimer"
           required: true
           allowReserved: true
           schema:
-            type: "integer"
+            type: "string"
       responses:
         '200':
           description: "Retourne la colocation"
@@ -110,13 +105,13 @@ paths:
           allowReserved: true
           schema:
             type: "integer"
-        - name: "askerId"
+        - name: "askerEmail"
           in: "query"
-          description: "ID du demandeur de la tâche"
+          description: "Email du demandeur de la tâche"
           required: true
           allowReserved: true
           schema:
-            type: "integer"
+            type: "string"
       responses:
         '200':
           description: "Retourne la colocation"          
@@ -144,13 +139,13 @@ paths:
           allowReserved: true
           schema:
             type: "integer"
-        - name: "donerID"
+        - name: "donerEmail"
           in: "query"
-          description: "ID de la personne ayant fait la tâche"
+          description: "Email de la personne ayant fait la tâche"
           required: true
           allowReserved: true
           schema:
-            type: "integer"
+            type: "string"
       responses:
         '200':
           description: "Retourne 'successful operation'"
@@ -195,9 +190,16 @@ paths:
       description: ""
       operationId: "addUser"
       parameters:
-        - name: "Name"
+        - name: "email"
           in: "query"
-          description: "Nom de l'utilisateur"
+          description: "email de l'utilisateur"
+          required: true
+          allowReserved: true
+          schema:
+            type : "string"
+        - name: "password"
+          in: "query"
+          description: "mot de passe de l'utilisateur"
           required: true
           allowReserved: true
           schema:
@@ -211,7 +213,7 @@ paths:
             type : "integer"
       responses:
         '200':
-          description: "Retourne l'ID de l'utilisateur'"
+          description: "Retourne le mail de l'utilisateur'"
   /users/delete:
     delete:
       tags:
@@ -220,13 +222,13 @@ paths:
       description: ""
       operationId: "deleteUser"
       parameters:
-        - name: "ID"
+        - name: "email"
           in: "query"
-          description: "ID de l'utilisateur à supprimer"
+          description: "email de l'utilisateur à supprimer"
           required: true
           allowReserved: true
           schema:
-            type: "integer"
+            type: "string"
       responses:
         '200':
           description: "Retourne 'Deleted'"

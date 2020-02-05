@@ -24,7 +24,7 @@ public class JwsUtils {
 	
 	public String saveToken(String value) {
 		Date date = new Date();
-		date.setMinutes(date.getMinutes() + 1);
+		date.setMinutes(date.getMinutes() + 30);
 		return Jwts.builder().setSubject(value).setExpiration(date).signWith(key).compact();
 	}
 	

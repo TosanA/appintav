@@ -10,10 +10,63 @@ info:
     
 servers:
   - url: "http://localhost:8080/"
+  
+components:
+  securitySchemes:
+     BearerAuth:
+      type: http
+      scheme: bearer
 
 paths:
+  /auth/login:
+    post:
+      tags:
+      - "Authentification"
+      summary: "S'authentifier"
+      operationId: "login"
+      parameters:
+        - name: "email"
+          in: "query"
+          description: "Email du colocataire"
+          required: true
+          allowReserved: true
+          schema:
+            type: "string"
+        - name: "password"
+          in: "query"
+          description: "Mot de passe du colocataire"
+          required: true
+          allowReserved: true
+          schema:
+            type: "string"
+      responses:
+          '200':
+            description: "Retourne le token"
+            
+  /auth/logout:
+    post:
+      security:
+        - bearerAuth: []
+      tags:
+      - "Authentification"
+      summary: "Se déconnecter"
+      operationId: "logout"
+      parameters:
+        - name: "token"
+          in: "query"
+          description: "Token de la connexion"
+          required: true
+          allowReserved: true
+          schema:
+            type: "string"
+      responses:
+          '200':
+            description: "Retourne le token" 
+        
   /colocations/add:
     post:
+      security:
+        - bearerAuth: []
       tags:
       - "Colocations"
       summary: "Ajouter une nouvelle colocation"
@@ -24,13 +77,15 @@ paths:
           description: "Retourne l'ID de la colocation" 
   /colocations/addUser:
     post:
+      security:
+        - bearerAuth: []
       tags:
       - "Colocations"
       summary: "Ajouter un nouveau habitant dans la colocation"
       description: ""
       operationId: "addOneUserInColocation"
       parameters:
-        - name: "ID"
+        - name: "id"
           in: "query"
           description: "ID de la colocation"
           required: true
@@ -51,13 +106,15 @@ paths:
           description: "L'utilisateur ou la colocation est introuvable, ou il existe déjà cet utilisateur dans la colocation."
   /colocations/removeUser:
     delete:
+      security:
+        - bearerAuth: []
       tags:
       - "Colocations"
       summary: "Supprimer un nouveau habitant dans la colocation"
       description: ""
       operationId: "removeOneUserInColocation"
       parameters:
-        - name: "ID"
+        - name: "id"
           in: "query"
           description: "ID de la colocation"
           required: true
@@ -78,13 +135,15 @@ paths:
           description: "L'utilisateur ou la colocation est introuvable, ou il existe déjà cet utilisateur dans la colocation."
   /colocations/addTask:
     post:
+      security:
+        - bearerAuth: []
       tags:
       - "Colocations"
       summary: "Ajouter une nouvelle tâche à la colocation"
       description: ""
       operationId: "addOneTaskInColocation"
       parameters:
-        - name: "ID"
+        - name: "id"
           in: "query"
           description: "ID de la colocation"
           required: true
@@ -119,20 +178,22 @@ paths:
           description: "L'utilisateur ou la colocation est introuvable, ou il existe déjà cet utilisateur dans la colocation."
   /colocations/taskDone:
     post:
+      security:
+        - bearerAuth: []
       tags:
       - "Colocations"
       summary: "Met une tâche 'faite'"
       description: ""
       operationId: "setOneTaskDoneInColocation"
       parameters:
-        - name: "ID"
+        - name: "id"
           in: "query"
           description: "ID de la colocation"
           required: true
           allowReserved: true
           schema:
             type: "integer"
-        - name: "taskID"
+        - name: "taskId"
           in: "query"
           description: "ID de la tâche à modifier"
           required: true
@@ -153,6 +214,8 @@ paths:
           description: "L'utilisateur ou la colocation est introuvable, ou il existe déjà cet utilisateur dans la colocation."
   /colocations/delete:
     delete:
+      security:
+        - bearerAuth: []
       tags:
       - "Colocations"
       summary: "Supprimer une colocation"
@@ -173,6 +236,8 @@ paths:
           description: "La colocation est introuvable."
   /colocations/all:
     get:
+      security:
+        - bearerAuth: []
       tags:
       - "Colocations"
       summary: "Récupérer toutes les colocations"
@@ -184,6 +249,8 @@ paths:
           
   /users/add:
     post:
+      security:
+        - bearerAuth: []
       tags:
       - "Users"
       summary: "Ajouter un utilisateur"
@@ -204,7 +271,7 @@ paths:
           allowReserved: true
           schema:
             type : "string"
-        - name: "Points"
+        - name: "points"
           in: "query"
           description: "Points de l'utilisateur"
           required: true
@@ -216,6 +283,8 @@ paths:
           description: "Retourne le mail de l'utilisateur'"
   /users/delete:
     delete:
+      security:
+        - bearerAuth: []
       tags:
       - "Users"
       summary: "Supprimer un utilisateur"
@@ -236,6 +305,8 @@ paths:
           description: "L'utilisateur est introuvable."
   /users/all:
     get:
+      security:
+        - bearerAuth: []
       tags:
       - "Users"
       summary: "Récupérer tous les utilisateurs"
@@ -247,13 +318,15 @@ paths:
   
   /tasks/delete:
     delete:
+      security:
+        - bearerAuth: []
       tags:
       - "Tasks"
       summary: "Supprimer une tâche"
       description: ""
       operationId: "deleteTask"
       parameters:
-        - name: "ID"
+        - name: "id"
           in: "query"
           description: "ID de la tâche à supprimer"
           required: true
@@ -267,6 +340,8 @@ paths:
           description: "La tâche est introuvable."
   /tasks/all:
     get:
+      security:
+        - bearerAuth: []
       tags:
       - "Tasks"
       summary: "Récupérer toutes les tâches"

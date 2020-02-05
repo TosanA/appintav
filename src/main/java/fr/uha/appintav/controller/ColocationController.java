@@ -148,6 +148,12 @@ public class ColocationController {
 		Optional<Colocation> colocOpt = this.colocationRepository.findById(id);
 		if (colocOpt.equals(Optional.empty()))
 			throw new RecordNotFoundException("Colocation with id '" + id + "' does not exist.");	
+		for(User user : colocOpt.get().getUsers()) {
+			this.userRepository.delete(user);
+		}
+		for(Task task : colocOpt.get().getTasks()) {
+			this.taskRepository.delete(task);
+		}
 		this.colocationRepository.deleteById(id);
 		return new ResponseEntity<>("Deleted", HttpStatus.OK);
 	}

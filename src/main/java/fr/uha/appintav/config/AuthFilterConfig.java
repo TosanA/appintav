@@ -16,6 +16,7 @@ public class AuthFilterConfig {
         registrationBean.addUrlPatterns("/colocations/*");
         registrationBean.addUrlPatterns("/tasks/*");
         registrationBean.addUrlPatterns("/users/*");
+        registrationBean.addUrlPatterns("/addresses/*");
         return registrationBean;
 	}
 }

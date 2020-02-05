@@ -22,7 +22,7 @@ public class AuthFilter implements Filter {
 		HttpServletRequest req = (HttpServletRequest) request;
 		String token = req.getHeader("Authorization");
 		
-		if (token != null && JwsUtils.getInstance().containsToken(token)) 
+		if (token != null && JwsUtils.getInstance().containsToken(token.substring(7))) 
 			chain.doFilter(request, response);
 		else 
 			((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "The token is not valid.");
